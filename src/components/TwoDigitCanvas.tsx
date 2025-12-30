@@ -221,7 +221,7 @@ export const TwoDigitCanvas = ({
             console.log('[TwoDigitCanvas] Instant submit timeout - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
-            clearAllCanvases();
+            // Don't call clearAllCanvases here - it will be called when problemKey changes
             onSubmit(expectedAnswer, true);
           }, instantDelay);
         } else {
@@ -230,7 +230,6 @@ export const TwoDigitCanvas = ({
             console.log('[TwoDigitCanvas] Delayed submit timeout - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
-            clearAllCanvases();
 
             if (combinedCandidates.includes(expectedAnswer)) {
               onSubmit(expectedAnswer, true);
@@ -248,7 +247,6 @@ export const TwoDigitCanvas = ({
             console.log('[TwoDigitCanvas] Strict instant submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
-            clearAllCanvases();
             onSubmit(combined, true);
           }, instantDelay);
         } else {
@@ -257,7 +255,6 @@ export const TwoDigitCanvas = ({
             console.log('[TwoDigitCanvas] Strict delayed submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
-            clearAllCanvases();
             onSubmit(combined!, combined === expectedAnswer);
           }, autoSubmitDelay);
         }
@@ -271,12 +268,11 @@ export const TwoDigitCanvas = ({
         console.log('[TwoDigitCanvas] Sudoku submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
         if (hasSubmittedRef.current || !isMountedRef.current) return;
         hasSubmittedRef.current = true;
-        clearAllCanvases();
         onSubmit(combined!, true);
       }, autoSubmitDelay);
     }
 
-  }, [singleDigitMode, hasDrawing, recognizeSingleDigit, onRecognize, expectedAnswer, onSubmit, showDebugInfo, autoSubmitDelay, clearAllCanvases, useCandidates, useInstantSubmitDelay]);
+  }, [singleDigitMode, hasDrawing, recognizeSingleDigit, onRecognize, expectedAnswer, onSubmit, showDebugInfo, autoSubmitDelay, useCandidates, useInstantSubmitDelay]);
 
   const getPosition = useCallback((e: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
