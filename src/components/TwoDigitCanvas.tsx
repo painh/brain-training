@@ -46,6 +46,7 @@ export const TwoDigitCanvas = ({
   const activeCanvasRef = useRef<'tens' | 'ones' | null>(null);
   const submitTimeoutRef = useRef<number | null>(null);
   const hasSubmittedRef = useRef(false);
+  const isMountedRef = useRef(true);
 
   const [debugInfo, setDebugInfo] = useState<{
     tens: DigitResult;
@@ -76,6 +77,14 @@ export const TwoDigitCanvas = ({
       submitTimeoutRef.current = null;
     }
   }, [clearSingleCanvas]);
+
+  // Track mounted state
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Initialize canvases and load model
   useEffect(() => {
@@ -202,15 +211,15 @@ export const TwoDigitCanvas = ({
         if (matches && combined === expectedAnswer) {
           // Match with top candidate - submit with optional delay
           submitTimeoutRef.current = window.setTimeout(() => {
-            if (hasSubmittedRef.current) return;
+            if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
             onSubmit(expectedAnswer, true);
-            clearAllCanvases();
+            if (isMountedRef.current) clearAllCanvases();
           }, instantDelay);
         } else {
           // Schedule delayed check
           submitTimeoutRef.current = window.setTimeout(() => {
-            if (hasSubmittedRef.current) return;
+            if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
 
             if (combinedCandidates.includes(expectedAnswer)) {
@@ -218,7 +227,7 @@ export const TwoDigitCanvas = ({
             } else {
               onSubmit(combined!, false);
             }
-            clearAllCanvases();
+            if (isMountedRef.current) clearAllCanvases();
           }, autoSubmitDelay);
         }
       } else {
@@ -227,18 +236,18 @@ export const TwoDigitCanvas = ({
         if (isCorrect) {
           // Correct - submit with optional delay
           submitTimeoutRef.current = window.setTimeout(() => {
-            if (hasSubmittedRef.current) return;
+            if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
             onSubmit(combined, true);
-            clearAllCanvases();
+            if (isMountedRef.current) clearAllCanvases();
           }, instantDelay);
         } else {
           // Schedule delayed submission
           submitTimeoutRef.current = window.setTimeout(() => {
-            if (hasSubmittedRef.current) return;
+            if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
             onSubmit(combined!, combined === expectedAnswer);
-            clearAllCanvases();
+            if (isMountedRef.current) clearAllCanvases();
           }, autoSubmitDelay);
         }
       }
@@ -248,10 +257,10 @@ export const TwoDigitCanvas = ({
         clearTimeout(submitTimeoutRef.current);
       }
       submitTimeoutRef.current = window.setTimeout(() => {
-        if (hasSubmittedRef.current) return;
+        if (hasSubmittedRef.current || !isMountedRef.current) return;
         hasSubmittedRef.current = true;
         onSubmit(combined!, true);
-        clearAllCanvases();
+        if (isMountedRef.current) clearAllCanvases();
       }, autoSubmitDelay);
     }
 
