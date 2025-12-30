@@ -68,6 +68,11 @@ export const TwoDigitCanvas = ({
   }, []);
 
   const clearAllCanvases = useCallback(() => {
+    console.log('[TwoDigitCanvas] clearAllCanvases called, isMounted:', isMountedRef.current);
+    if (!isMountedRef.current) {
+      console.log('[TwoDigitCanvas] Skipping clearAllCanvases - component unmounted');
+      return;
+    }
     clearSingleCanvas(tensCanvasRef.current);
     clearSingleCanvas(onesCanvasRef.current);
     setDebugInfo(null);
@@ -80,8 +85,10 @@ export const TwoDigitCanvas = ({
 
   // Track mounted state
   useEffect(() => {
+    console.log('[TwoDigitCanvas] Component mounted');
     isMountedRef.current = true;
     return () => {
+      console.log('[TwoDigitCanvas] Component unmounting');
       isMountedRef.current = false;
     };
   }, []);
@@ -211,23 +218,25 @@ export const TwoDigitCanvas = ({
         if (matches && combined === expectedAnswer) {
           // Match with top candidate - submit with optional delay
           submitTimeoutRef.current = window.setTimeout(() => {
+            console.log('[TwoDigitCanvas] Instant submit timeout - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
+            clearAllCanvases();
             onSubmit(expectedAnswer, true);
-            if (isMountedRef.current) clearAllCanvases();
           }, instantDelay);
         } else {
           // Schedule delayed check
           submitTimeoutRef.current = window.setTimeout(() => {
+            console.log('[TwoDigitCanvas] Delayed submit timeout - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
+            clearAllCanvases();
 
             if (combinedCandidates.includes(expectedAnswer)) {
               onSubmit(expectedAnswer, true);
             } else {
               onSubmit(combined!, false);
             }
-            if (isMountedRef.current) clearAllCanvases();
           }, autoSubmitDelay);
         }
       } else {
@@ -236,18 +245,20 @@ export const TwoDigitCanvas = ({
         if (isCorrect) {
           // Correct - submit with optional delay
           submitTimeoutRef.current = window.setTimeout(() => {
+            console.log('[TwoDigitCanvas] Strict instant submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
+            clearAllCanvases();
             onSubmit(combined, true);
-            if (isMountedRef.current) clearAllCanvases();
           }, instantDelay);
         } else {
           // Schedule delayed submission
           submitTimeoutRef.current = window.setTimeout(() => {
+            console.log('[TwoDigitCanvas] Strict delayed submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
             if (hasSubmittedRef.current || !isMountedRef.current) return;
             hasSubmittedRef.current = true;
+            clearAllCanvases();
             onSubmit(combined!, combined === expectedAnswer);
-            if (isMountedRef.current) clearAllCanvases();
           }, autoSubmitDelay);
         }
       }
@@ -257,10 +268,11 @@ export const TwoDigitCanvas = ({
         clearTimeout(submitTimeoutRef.current);
       }
       submitTimeoutRef.current = window.setTimeout(() => {
+        console.log('[TwoDigitCanvas] Sudoku submit - hasSubmitted:', hasSubmittedRef.current, 'isMounted:', isMountedRef.current);
         if (hasSubmittedRef.current || !isMountedRef.current) return;
         hasSubmittedRef.current = true;
+        clearAllCanvases();
         onSubmit(combined!, true);
-        if (isMountedRef.current) clearAllCanvases();
       }, autoSubmitDelay);
     }
 

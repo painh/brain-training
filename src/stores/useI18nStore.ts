@@ -69,6 +69,7 @@ interface Translations {
   ones_digit: string;
   candidates: string;
   history: string;
+  no_history: string;
 }
 
 const translations: Record<Language, Translations> = {
@@ -129,6 +130,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: '1의 자리',
     candidates: '후보',
     history: '기록',
+    no_history: '기록이 없습니다',
   },
 
   en: {
@@ -188,6 +190,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: 'Ones',
     candidates: 'Candidates',
     history: 'History',
+    no_history: 'No history yet',
   },
 
   ja: {
@@ -247,6 +250,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: '1の位',
     candidates: '候補',
     history: '履歴',
+    no_history: '履歴がありません',
   },
 
   'zh-CN': {
@@ -306,6 +310,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: '个位',
     candidates: '候选',
     history: '历史',
+    no_history: '暂无历史记录',
   },
 
   'zh-TW': {
@@ -365,6 +370,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: '個位',
     candidates: '候選',
     history: '歷史',
+    no_history: '目前沒有歷史記錄',
   },
 
   es: {
@@ -424,6 +430,7 @@ const translations: Record<Language, Translations> = {
     ones_digit: 'Unidades',
     candidates: 'Candidatos',
     history: 'Historial',
+    no_history: 'Sin historial',
   },
 };
 

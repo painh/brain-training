@@ -8,7 +8,7 @@ import {
   Calendar,
   CalendarStats,
 } from './components';
-import { CalcGame, CalcGameInput, SudokuGame, SudokuGameInput, RecognitionDebug } from './games';
+import { CalcGame, CalcGameInput, SudokuGame, SudokuGameInput, RecognitionDebug, RecognitionDebugInput } from './games';
 import styles from './App.module.css';
 
 // Format build time as version string (YYMMDD.HHmm)
@@ -170,7 +170,7 @@ function App() {
         return <SudokuGameInput />;
 
       case 'debug':
-        return null;
+        return <RecognitionDebugInput />;
 
       case 'settings':
         return null;
