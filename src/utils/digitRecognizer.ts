@@ -31,7 +31,7 @@ export function isModelReady(): boolean {
 
 // Preprocess canvas to 28x28 grayscale tensor (MNIST-style preprocessing)
 function preprocessCanvas(canvas: HTMLCanvasElement): tf.Tensor4D {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) throw new Error('Cannot get canvas context');
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -85,7 +85,7 @@ function preprocessCanvas(canvas: HTMLCanvasElement): tf.Tensor4D {
   const scaledCanvas = document.createElement('canvas');
   scaledCanvas.width = scaledW;
   scaledCanvas.height = scaledH;
-  const scaledCtx = scaledCanvas.getContext('2d')!;
+  const scaledCtx = scaledCanvas.getContext('2d', { willReadFrequently: true })!;
 
   // Use high quality scaling
   scaledCtx.imageSmoothingEnabled = true;
@@ -102,7 +102,7 @@ function preprocessCanvas(canvas: HTMLCanvasElement): tf.Tensor4D {
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = finalSize;
   tempCanvas.height = finalSize;
-  const tempCtx = tempCanvas.getContext('2d')!;
+  const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
 
   // Fill with white (MNIST background)
   tempCtx.fillStyle = 'white';
@@ -249,7 +249,7 @@ function preprocessRegion(
   regionMinY: number,
   regionMaxY: number
 ): tf.Tensor4D {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return tf.zeros([1, 28, 28, 1]);
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -291,7 +291,7 @@ function preprocessRegion(
   const scaledCanvas = document.createElement('canvas');
   scaledCanvas.width = scaledW;
   scaledCanvas.height = scaledH;
-  const scaledCtx = scaledCanvas.getContext('2d')!;
+  const scaledCtx = scaledCanvas.getContext('2d', { willReadFrequently: true })!;
 
   scaledCtx.imageSmoothingEnabled = true;
   scaledCtx.imageSmoothingQuality = 'high';
@@ -306,7 +306,7 @@ function preprocessRegion(
   const tempCanvas = document.createElement('canvas');
   tempCanvas.width = finalSize;
   tempCanvas.height = finalSize;
-  const tempCtx = tempCanvas.getContext('2d')!;
+  const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true })!;
 
   tempCtx.fillStyle = 'white';
   tempCtx.fillRect(0, 0, finalSize, finalSize);
@@ -336,7 +336,7 @@ export async function recognizeNumber(canvas: HTMLCanvasElement): Promise<number
     if (!model) return 0;
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return 0;
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -429,7 +429,7 @@ export async function recognizeWithCandidates(
     if (!model) return [0];
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return [0];
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -517,7 +517,7 @@ export async function recognizeWithConfidence(
     if (!model) return { digit: 0, confidence: 0, candidates: [] };
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return { digit: 0, confidence: 0, candidates: [] };
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -575,7 +575,7 @@ export async function quickCheckAnswer(
     if (!model) return { matches: false, recognized: 0, confidence: 0 };
   }
 
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return { matches: false, recognized: 0, confidence: 0 };
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -617,7 +617,7 @@ export async function quickCheckAnswer(
 
 // Fallback pattern-based recognition
 function fallbackRecognize(canvas: HTMLCanvasElement): number {
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
   if (!ctx) return 0;
 
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

@@ -61,7 +61,7 @@ export const TwoDigitCanvas = ({
 
   const clearSingleCanvas = useCallback((canvas: HTMLCanvasElement | null) => {
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
     ctx.fillStyle = '#FFFFF8';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -99,7 +99,7 @@ export const TwoDigitCanvas = ({
 
   // Check if canvas has any drawing
   const hasDrawing = useCallback((canvas: HTMLCanvasElement): boolean => {
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return false;
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < imageData.data.length; i += 4) {
@@ -302,7 +302,7 @@ export const TwoDigitCanvas = ({
       submitTimeoutRef.current = null;
     }
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (ctx) {
       ctx.strokeStyle = '#333';
       ctx.lineWidth = 6;
@@ -320,7 +320,7 @@ export const TwoDigitCanvas = ({
 
     const canvas = activeCanvasRef.current === 'tens' ? tensCanvasRef.current : onesCanvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
 
     const pos = getPosition(e, canvas);
