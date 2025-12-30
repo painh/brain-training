@@ -183,7 +183,7 @@ function App() {
         return <CalcGameInput />;
 
       case 'sudoku':
-        return <SudokuGameInput />;
+        return <SudokuGameInput onBack={goToMenu} />;
 
       case 'debug':
         return <RecognitionDebugInput />;

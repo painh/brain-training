@@ -48,12 +48,11 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
     }
   }, [isComplete, difficulty, saveProgress, onComplete, getStats]);
 
+  // Only show errors in easy mode (to prevent brute force in medium/hard)
+  const showErrors = difficulty === 'easy';
+
   return (
     <div className={styles.topContent}>
-      <button className={styles.backButton} onClick={onBack}>
-        ←
-      </button>
-
       <div className={styles.gridContainer}>
         <div className={styles.grid}>
           {userGrid.map((row, rowIdx) =>
@@ -62,7 +61,7 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
               const isSelected =
                 selectedCell?.row === rowIdx && selectedCell?.col === colIdx;
               const isError =
-                cell !== 0 && cell !== solution[rowIdx][colIdx];
+                showErrors && cell !== 0 && cell !== solution[rowIdx][colIdx];
               const cellNotes = notes[rowIdx][colIdx];
               const hasUserNotes = cellNotes.size > 0 && cell === 0;
 
@@ -116,7 +115,11 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
 };
 
 // Bottom screen input
-export const SudokuGameInput = () => {
+interface SudokuGameInputProps {
+  onBack: () => void;
+}
+
+export const SudokuGameInput = ({ onBack }: SudokuGameInputProps) => {
   const { inputMode, setInputMode } = useAppStore();
   const { inputNumber, eraseCell, selectedCell, showHints, setShowHints, difficulty, setDifficulty, startGame } = useSudokuStore();
   const { t } = useI18nStore();
@@ -201,6 +204,10 @@ export const SudokuGameInput = () => {
           </button>
         </div>
       ) : null}
+
+      <button className={styles.quitButton} onClick={onBack}>
+        {t.quit_game}
+      </button>
     </div>
   );
 };

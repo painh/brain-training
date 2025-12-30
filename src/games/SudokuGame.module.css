@@ -273,6 +273,28 @@
   box-shadow: none;
 }
 
+.quitButton {
+  margin-top: auto;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 12px;
+  padding: 8px 20px;
+  border: 2px solid var(--ds-border);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F0F0E8 100%);
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--ds-shadow);
+  color: var(--ds-gray);
+}
+
+.quitButton:hover {
+  background: linear-gradient(180deg, #F8F8F0 0%, #E8E8E0 100%);
+}
+
+.quitButton:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
 @media (max-height: 700px), (max-width: 500px) {
   .sudokuPad {
     gap: 5px;

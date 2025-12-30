@@ -46,6 +46,7 @@ interface Translations {
   hint_on: string;
   hint_off: string;
   erase: string;
+  quit_game: string;
 
   // Canvas
   write_number: string;
@@ -111,6 +112,7 @@ const translations: Record<Language, Translations> = {
     hint_on: '힌트 ON',
     hint_off: '힌트 OFF',
     erase: '지우기',
+    quit_game: '게임 중단',
 
     write_number: '숫자를 쓰세요',
 
@@ -171,6 +173,7 @@ const translations: Record<Language, Translations> = {
     hint_on: 'Hints ON',
     hint_off: 'Hints OFF',
     erase: 'Erase',
+    quit_game: 'Quit',
 
     write_number: 'Write a number',
 
@@ -231,6 +234,7 @@ const translations: Record<Language, Translations> = {
     hint_on: 'ヒント ON',
     hint_off: 'ヒント OFF',
     erase: '消す',
+    quit_game: '中断',
 
     write_number: '数字を書いてください',
 
@@ -291,6 +295,7 @@ const translations: Record<Language, Translations> = {
     hint_on: '提示 开',
     hint_off: '提示 关',
     erase: '擦除',
+    quit_game: '退出',
 
     write_number: '请写数字',
 
@@ -351,6 +356,7 @@ const translations: Record<Language, Translations> = {
     hint_on: '提示 開',
     hint_off: '提示 關',
     erase: '擦除',
+    quit_game: '退出',
 
     write_number: '請寫數字',
 
@@ -411,6 +417,7 @@ const translations: Record<Language, Translations> = {
     hint_on: 'Pistas ON',
     hint_off: 'Pistas OFF',
     erase: 'Borrar',
+    quit_game: 'Salir',
 
     write_number: 'Escribe un número',
 
