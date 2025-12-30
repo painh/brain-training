@@ -26,12 +26,16 @@
   background: var(--ds-cream-light);
 }
 
+.header {
+  margin-bottom: 5px;
+}
+
 .title {
   font-family: 'DotGothic16', sans-serif;
   font-size: 14px;
   color: var(--ds-gray);
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: 3px;
 }
 
 .rules {
@@ -45,17 +49,16 @@
 
 .difficultyButtons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
-  margin: 10px 0;
 }
 
 .diffButton {
-  padding: 6px 14px;
+  padding: 4px 12px;
   font-family: 'DotGothic16', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   border: 2px solid var(--ds-border);
-  border-radius: 15px;
+  border-radius: 12px;
   background: white;
   cursor: pointer;
   transition: all 0.15s;
@@ -76,6 +79,7 @@
   justify-content: center;
   align-items: center;
   flex: 1;
+  padding: 10px;
 }
 
 .grid {
@@ -85,20 +89,24 @@
   background: #333;
   border: 3px solid #333;
   border-radius: 4px;
-  width: fit-content;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  overflow: hidden;
 }
 
 .cell {
-  width: 28px;
-  height: 28px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'DotGothic16', sans-serif;
-  font-size: 16px;
+  font-size: clamp(16px, 5vw, 24px);
   background: #FFFFF8;
   cursor: pointer;
   transition: background 0.1s;
+  position: relative;
+  overflow: hidden;
 }
 
 .cell:hover {
@@ -125,26 +133,57 @@
   color: var(--ds-blue);
 }
 
-.cell.hasNotes {
-  padding: 0;
+/* Number display layer */
+.cellNumber {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cellNumber.hidden {
+  display: none;
 }
 
 /* Notes grid inside cell */
 .notesGrid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  width: 100%;
-  height: 100%;
+  box-sizing: border-box;
+}
+
+.notesGrid.hidden {
+  display: none;
 }
 
 .noteNum {
-  font-size: 8px;
+  font-size: clamp(7px, 2vw, 10px);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--ds-gray);
-  opacity: 0.8;
+  color: transparent;
+  font-weight: 500;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.noteNum.active {
+  color: var(--ds-blue);
+  font-weight: bold;
+}
+
+.noteNum.hint {
+  color: #666666;
 }
 
 /* 3x3 box borders */
@@ -201,11 +240,15 @@
   box-shadow: none;
 }
 
-.noteModeButton {
-  margin: 10px 0;
+.eraseButton {
+  margin-top: 10px;
+}
+
+.hintModeButton {
+  margin: 8px 0;
   font-family: 'DotGothic16', sans-serif;
-  font-size: 12px;
-  padding: 6px 16px;
+  font-size: 11px;
+  padding: 5px 14px;
   border: 2px solid var(--ds-border);
   border-radius: 8px;
   background: linear-gradient(180deg, #FFFFFF 0%, #F0F0E8 100%);
@@ -215,44 +258,39 @@
   color: var(--ds-gray);
 }
 
-.noteModeButton:hover {
+.hintModeButton:hover {
   background: linear-gradient(180deg, #F8F8F0 0%, #E8E8E0 100%);
 }
 
-.noteModeButton.active {
+.hintModeButton.active {
   background: linear-gradient(180deg, #E0F0FF 0%, #C0E0F8 100%);
   border-color: var(--ds-blue);
   color: var(--ds-blue-dark);
 }
 
-.noteModeButton:active {
+.hintModeButton:active {
   transform: translateY(2px);
   box-shadow: none;
 }
 
 @media (max-height: 700px), (max-width: 500px) {
-  .cell {
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-  }
-
-  .noteNum {
-    font-size: 6px;
-  }
-
   .sudokuPad {
     gap: 5px;
     padding: 5px;
   }
 
   .numButton {
-    padding: 10px 16px;
-    font-size: 18px;
+    padding: 8px 14px;
+    font-size: 16px;
   }
 
-  .noteModeButton {
+  .hintModeButton {
     font-size: 10px;
     padding: 4px 12px;
+  }
+
+  .diffButton {
+    padding: 3px 10px;
+    font-size: 10px;
   }
 }

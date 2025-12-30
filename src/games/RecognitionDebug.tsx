@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TwoDigitCanvas } from '../components';
+import { useI18nStore } from '../stores/useI18nStore';
 import styles from './RecognitionDebug.module.css';
 
 interface RecognitionResult {
@@ -10,6 +11,7 @@ interface RecognitionResult {
 }
 
 export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
+  const { t } = useI18nStore();
   const [history, setHistory] = useState<number[]>([]);
 
   const handleRecognize = (res: RecognitionResult) => {
@@ -22,7 +24,7 @@ export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
     <div className={styles.container}>
       <div className={styles.header}>
         <button className={styles.backButton} onClick={onBack}>←</button>
-        <h1>인식 디버그</h1>
+        <h1>{t.debug_title}</h1>
       </div>
 
       <div className={styles.main}>
@@ -34,7 +36,7 @@ export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
         {/* History */}
         {history.length > 0 && (
           <div className={styles.history}>
-            <h3>History</h3>
+            <h3>{t.history}</h3>
             <div className={styles.historyList}>
               {history.map((h, i) => (
                 <span key={i} className={styles.historyItem}>{h}</span>

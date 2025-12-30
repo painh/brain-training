@@ -157,6 +157,16 @@
   color: #333;
 }
 
+.version {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 10px;
+  color: var(--ds-gray);
+  text-align: center;
+  opacity: 0.6;
+  margin-top: auto;
+  padding-bottom: 5px;
+}
+
 /* Complete Screen */
 .completeScreen {
   padding: 20px;
@@ -184,6 +194,104 @@
 .brainAgeSection {
   margin: 20px 0;
   text-align: center;
+}
+
+/* Settings Screen */
+.settingsScreen {
+  padding: 20px;
+  height: 100%;
+  position: relative;
+}
+
+.backButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--ds-border);
+  background: var(--ds-cream);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 10;
+}
+
+.backButton:hover {
+  background: var(--ds-cream-light);
+}
+
+.settingsTitle {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 20px;
+  color: var(--ds-blue-dark);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.settingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.settingItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 15px;
+  background: white;
+  border: 2px solid var(--ds-border);
+  border-radius: 10px;
+  cursor: pointer;
+  position: relative;
+}
+
+.settingLabel {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.settingDesc {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 11px;
+  color: var(--ds-gray);
+  line-height: 1.4;
+}
+
+.settingCheckbox {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.settingSelect {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  padding: 8px 12px;
+  border: 2px solid var(--ds-border);
+  border-radius: 8px;
+  background: var(--ds-cream);
+  color: #333;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
+.settingSelect:hover {
+  border-color: var(--ds-blue);
+}
+
+.settingSelect:focus {
+  outline: none;
+  border-color: var(--ds-blue);
 }
 
 /* Mobile adjustments */

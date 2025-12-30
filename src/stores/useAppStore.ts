@@ -17,6 +17,12 @@ interface AppStore {
   inputMode: InputMode;
   setInputMode: (mode: InputMode) => void;
 
+  // Settings
+  useCandidates: boolean; // Use candidate matching for digit recognition (lenient mode)
+  setUseCandidates: (use: boolean) => void;
+  useInstantSubmitDelay: boolean; // Wait 0.1s before submitting correct answer (default: true)
+  setUseInstantSubmitDelay: (use: boolean) => void;
+
   // Professor
   professorExpression: ProfessorExpression;
   setProfessorExpression: (expr: ProfessorExpression) => void;
@@ -48,6 +54,12 @@ export const useAppStore = create<AppStore>()(
       // Input mode
       inputMode: 'draw',
       setInputMode: (mode) => set({ inputMode: mode }),
+
+      // Settings
+      useCandidates: false,
+      setUseCandidates: (use) => set({ useCandidates: use }),
+      useInstantSubmitDelay: true,
+      setUseInstantSubmitDelay: (use) => set({ useInstantSubmitDelay: use }),
 
       // Professor
       professorExpression: 'normal',
@@ -101,6 +113,8 @@ export const useAppStore = create<AppStore>()(
         studyDays: state.studyDays,
         history: state.history,
         brainAges: state.brainAges,
+        useCandidates: state.useCandidates,
+        useInstantSubmitDelay: state.useInstantSubmitDelay,
       }),
     }
   )

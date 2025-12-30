@@ -61,4 +61,4 @@ export interface AppState {
 export type ProfessorExpression = 'normal' | 'happy' | 'sad' | 'thinking';
 
 // Screen views
-export type ScreenView = 'menu' | 'calc' | 'sudoku' | 'calendar' | 'complete' | 'debug';
+export type ScreenView = 'menu' | 'calc' | 'sudoku' | 'calendar' | 'complete' | 'debug' | 'settings';

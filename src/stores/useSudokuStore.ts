@@ -13,6 +13,7 @@ interface SudokuStore {
   difficulty: Difficulty;
   isComplete: boolean;
   noteMode: boolean; // Toggle between input mode and note mode
+  showHints: boolean; // Auto-show possible candidates
 
   // Actions
   startGame: (difficulty?: Difficulty) => void;
@@ -22,6 +23,8 @@ interface SudokuStore {
   eraseCell: () => void;
   setDifficulty: (diff: Difficulty) => void;
   setNoteMode: (enabled: boolean) => void;
+  setShowHints: (enabled: boolean) => void;
+  getCandidates: (row: number, col: number) => Set<number>; // Get possible candidates for a cell
   checkComplete: () => boolean;
   reset: () => void;
 }
@@ -121,6 +124,7 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
   difficulty: 'easy',
   isComplete: false,
   noteMode: false,
+  showHints: true, // Default to showing hints
 
   startGame: (difficulty) => {
     const diff = difficulty || get().difficulty;
@@ -140,19 +144,15 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
 
   selectCell: (row, col) => {
     const { puzzle } = get();
-    console.log('selectCell called:', row, col, 'puzzle value:', puzzle[row][col]);
     // Can only select non-fixed cells
     if (puzzle[row][col] !== 0) {
-      console.log('Cell is fixed, cannot select');
       return;
     }
-    console.log('Setting selectedCell:', { row, col });
     set({ selectedCell: { row, col } });
   },
 
   inputNumber: (num) => {
     const { selectedCell, userGrid, puzzle, notes, noteMode } = get();
-    console.log('inputNumber called:', num, 'noteMode:', noteMode, 'selectedCell:', selectedCell);
     if (!selectedCell) return;
 
     const { row, col } = selectedCell;
@@ -160,7 +160,6 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
 
     if (noteMode) {
       // In note mode, toggle the note
-      console.log('Calling toggleNote for:', num);
       get().toggleNote(num);
     } else {
       // In normal mode, set the number and clear notes
@@ -180,23 +179,25 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
 
   toggleNote: (num) => {
     const { selectedCell, userGrid, puzzle, notes } = get();
-    console.log('toggleNote called:', num, 'selectedCell:', selectedCell);
     if (!selectedCell) return;
 
     const { row, col } = selectedCell;
     if (puzzle[row][col] !== 0) return; // Can't add notes to fixed cells
-    if (userGrid[row][col] !== 0) return; // Can't add notes if cell has a number
+
+    // If cell has a number, clear it first to allow notes
+    const newGrid = userGrid.map((r) => [...r]);
+    if (newGrid[row][col] !== 0) {
+      newGrid[row][col] = 0;
+    }
 
     const newNotes = notes.map((r) => r.map((s) => new Set(s)));
     if (newNotes[row][col].has(num)) {
       newNotes[row][col].delete(num);
-      console.log('Removed note:', num, 'from cell:', row, col);
     } else {
       newNotes[row][col].add(num);
-      console.log('Added note:', num, 'to cell:', row, col);
     }
 
-    set({ notes: newNotes });
+    set({ userGrid: newGrid, notes: newNotes });
   },
 
   eraseCell: () => {
@@ -222,6 +223,63 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
 
   setNoteMode: (enabled) => {
     set({ noteMode: enabled });
+  },
+
+  setShowHints: (enabled) => {
+    set({ showHints: enabled });
+  },
+
+  getCandidates: (row, col) => {
+    const { userGrid, puzzle } = get();
+    const candidates = new Set<number>();
+
+    // If cell is fixed or already has a number, return empty
+    if (puzzle[row][col] !== 0 || userGrid[row][col] !== 0) {
+      return candidates;
+    }
+
+    // Check each number 1-9
+    for (let num = 1; num <= 9; num++) {
+      let isValid = true;
+
+      // Check row (both puzzle fixed numbers and user input)
+      for (let c = 0; c < 9; c++) {
+        if (puzzle[row][c] === num || userGrid[row][c] === num) {
+          isValid = false;
+          break;
+        }
+      }
+
+      // Check column
+      if (isValid) {
+        for (let r = 0; r < 9; r++) {
+          if (puzzle[r][col] === num || userGrid[r][col] === num) {
+            isValid = false;
+            break;
+          }
+        }
+      }
+
+      // Check 3x3 box
+      if (isValid) {
+        const boxRow = Math.floor(row / 3) * 3;
+        const boxCol = Math.floor(col / 3) * 3;
+        for (let r = boxRow; r < boxRow + 3 && isValid; r++) {
+          for (let c = boxCol; c < boxCol + 3; c++) {
+            if (puzzle[r][c] === num || userGrid[r][c] === num) {
+              isValid = false;
+              break;
+            }
+          }
+        }
+      }
+
+      if (isValid) {
+        candidates.add(num);
+      }
+    }
+
+    return candidates;
   },
 
   checkComplete: () => {

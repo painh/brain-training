@@ -1,73 +1,34 @@
-# React + TypeScript + Vite
+# 🧠 두뇌 트레이닝
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+닌텐도 DS 스타일의 두뇌 트레이닝 웹 앱입니다.
 
-Currently, two official plugins are available:
+## 기능
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **계산 트레이닝** - 덧셈, 뺄셈 등 연산 문제를 풀며 두뇌를 단련
+- **스도쿠** - 클래식 스도쿠 퍼즐
+- **손글씨 숫자 인식** - TensorFlow.js 기반 숫자 인식 지원
+- **학습 기록** - 캘린더에서 학습 이력 확인
+- **두뇌 나이 측정** - 훈련 결과에 따른 두뇌 나이 계산
+- **다국어 지원** - 한국어, 영어, 일본어
 
-## React Compiler
+## 실행 방법
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# 의존성 설치
+npm install
 
-## Expanding the ESLint configuration
+# 개발 서버 실행
+npm run dev
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# 프로덕션 빌드
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 기술 스택
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- React 19
+- TypeScript
+- Vite
+- Zustand (상태 관리)
+- TensorFlow.js (숫자 인식)
+- Howler (사운드)

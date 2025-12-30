@@ -105,6 +105,12 @@
   margin: 2px 0;
 }
 
+.confidence {
+  color: var(--ds-green);
+  font-weight: normal;
+  font-size: 14px;
+}
+
 @media (max-height: 600px) {
   .canvas {
     width: 80px;

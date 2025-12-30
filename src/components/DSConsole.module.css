@@ -1,6 +1,7 @@
 .console {
   width: 100%;
   max-width: 400px;
+  height: calc(100dvh - 40px);
   background: linear-gradient(180deg, #E8E4D9 0%, #D4D0C5 100%);
   border-radius: 20px;
   padding: 15px;
@@ -11,6 +12,9 @@
     inset 0 1px 0 rgba(255,255,255,0.5);
   display: flex;
   flex-direction: column;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .screen {
@@ -26,7 +30,6 @@
 .screenInner {
   background: var(--screen-bg);
   border-radius: 4px;
-  min-height: 200px;
   flex: 1;
   position: relative;
   overflow: hidden;
@@ -38,7 +41,6 @@
 }
 
 .touchScreenInner {
-  min-height: 280px;
   background: #F8F8F0;
 }
 

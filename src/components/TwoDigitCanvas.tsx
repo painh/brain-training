@@ -1,11 +1,13 @@
 import { useRef, useCallback, useEffect, useState } from 'react';
-import { loadModel, recognizeWithCandidates } from '../utils/digitRecognizer';
+import { loadModel, recognizeWithConfidence } from '../utils/digitRecognizer';
+import { useI18nStore } from '../stores/useI18nStore';
 import { startDrawingSound, stopDrawingSound } from '../utils/sounds';
 import styles from './TwoDigitCanvas.module.css';
 
 interface DigitResult {
   digit: number | null;
   candidates: number[];
+  confidence?: number;
 }
 
 interface TwoDigitCanvasProps {
@@ -21,6 +23,8 @@ interface TwoDigitCanvasProps {
   showDebugInfo?: boolean;
   autoSubmitDelay?: number;
   singleDigitMode?: boolean; // For sudoku - only show ones digit canvas
+  useCandidates?: boolean; // If true, check if expectedAnswer is in candidates list (default: false)
+  useInstantSubmitDelay?: boolean; // If true, wait 100ms before submitting correct answer (default: true)
 }
 
 export const TwoDigitCanvas = ({
@@ -31,7 +35,10 @@ export const TwoDigitCanvas = ({
   showDebugInfo = false,
   autoSubmitDelay = 500,
   singleDigitMode = false,
+  useCandidates = false,
+  useInstantSubmitDelay = true,
 }: TwoDigitCanvasProps) => {
+  const { t } = useI18nStore();
   const tensCanvasRef = useRef<HTMLCanvasElement>(null);
   const onesCanvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawingRef = useRef(false);
@@ -45,6 +52,7 @@ export const TwoDigitCanvas = ({
     ones: DigitResult;
     combined: number | null;
     combinedCandidates: number[];
+    confidence?: number;
   } | null>(null);
 
   const canvasWidth = 100;
@@ -94,14 +102,18 @@ export const TwoDigitCanvas = ({
   // Recognize a single digit from canvas
   const recognizeSingleDigit = useCallback(async (canvas: HTMLCanvasElement): Promise<DigitResult> => {
     if (!hasDrawing(canvas)) {
-      return { digit: null, candidates: [] };
+      return { digit: null, candidates: [], confidence: 0 };
     }
     try {
-      const candidates = await recognizeWithCandidates(canvas, 3);
-      return { digit: candidates[0] ?? null, candidates };
+      const result = await recognizeWithConfidence(canvas, 3);
+      return {
+        digit: result.digit,
+        candidates: result.candidates.map(c => c.digit),
+        confidence: result.confidence,
+      };
     } catch (e) {
       console.error('Recognition failed:', e);
-      return { digit: null, candidates: [] };
+      return { digit: null, candidates: [], confidence: 0 };
     }
   }, [hasDrawing]);
 
@@ -126,19 +138,21 @@ export const TwoDigitCanvas = ({
 
     const tens = !singleDigitMode && tensCanvas
       ? await recognizeSingleDigit(tensCanvas)
-      : { digit: null, candidates: [] };
+      : { digit: null, candidates: [], confidence: 0 };
     const ones = onesCanvas
       ? await recognizeSingleDigit(onesCanvas)
-      : { digit: null, candidates: [] };
+      : { digit: null, candidates: [], confidence: 0 };
 
     // Combine results
     let combined: number | null = null;
     let combinedCandidates: number[] = [];
+    let confidence: number | undefined;
 
     if (singleDigitMode) {
       // Single digit mode - only use ones canvas
       combined = ones.digit;
       combinedCandidates = ones.candidates;
+      confidence = ones.confidence;
     } else if (hasTensDrawing && hasOnesDrawing) {
       // Both digits - 2-digit number
       if (tens.digit !== null && ones.digit !== null) {
@@ -148,18 +162,22 @@ export const TwoDigitCanvas = ({
             combinedCandidates.push(t * 10 + o);
           }
         }
+        // Combined confidence is product of both
+        confidence = (tens.confidence ?? 0) * (ones.confidence ?? 0);
       }
     } else if (hasOnesDrawing && !hasTensDrawing) {
       // Only ones digit - single digit
       combined = ones.digit;
       combinedCandidates = ones.candidates;
+      confidence = ones.confidence;
     } else if (hasTensDrawing && !hasOnesDrawing) {
       // Only tens digit - treat as single digit
       combined = tens.digit;
       combinedCandidates = tens.candidates;
+      confidence = tens.confidence;
     }
 
-    const result = { tens, ones, combined, combinedCandidates };
+    const result = { tens, ones, combined, combinedCandidates, confidence };
 
     if (showDebugInfo) {
       setDebugInfo(result);
@@ -174,27 +192,55 @@ export const TwoDigitCanvas = ({
         clearTimeout(submitTimeoutRef.current);
       }
 
-      // Check if any candidate matches
-      const matches = combinedCandidates.includes(expectedAnswer);
+      // Instant submit delay: 100ms if enabled, 0 if disabled
+      const instantDelay = useInstantSubmitDelay ? 100 : 0;
 
-      if (matches && combined === expectedAnswer) {
-        // Instant match with top candidate
-        hasSubmittedRef.current = true;
-        onSubmit(expectedAnswer, true);
-        clearAllCanvases();
-      } else {
-        // Schedule delayed check
-        submitTimeoutRef.current = window.setTimeout(() => {
-          if (hasSubmittedRef.current) return;
-          hasSubmittedRef.current = true;
+      if (useCandidates) {
+        // Check if any candidate matches (lenient mode)
+        const matches = combinedCandidates.includes(expectedAnswer);
 
-          if (combinedCandidates.includes(expectedAnswer)) {
+        if (matches && combined === expectedAnswer) {
+          // Match with top candidate - submit with optional delay
+          submitTimeoutRef.current = window.setTimeout(() => {
+            if (hasSubmittedRef.current) return;
+            hasSubmittedRef.current = true;
             onSubmit(expectedAnswer, true);
-          } else {
-            onSubmit(combined!, false);
-          }
-          clearAllCanvases();
-        }, autoSubmitDelay);
+            clearAllCanvases();
+          }, instantDelay);
+        } else {
+          // Schedule delayed check
+          submitTimeoutRef.current = window.setTimeout(() => {
+            if (hasSubmittedRef.current) return;
+            hasSubmittedRef.current = true;
+
+            if (combinedCandidates.includes(expectedAnswer)) {
+              onSubmit(expectedAnswer, true);
+            } else {
+              onSubmit(combined!, false);
+            }
+            clearAllCanvases();
+          }, autoSubmitDelay);
+        }
+      } else {
+        // Strict mode - only check top recognition result
+        const isCorrect = combined === expectedAnswer;
+        if (isCorrect) {
+          // Correct - submit with optional delay
+          submitTimeoutRef.current = window.setTimeout(() => {
+            if (hasSubmittedRef.current) return;
+            hasSubmittedRef.current = true;
+            onSubmit(combined, true);
+            clearAllCanvases();
+          }, instantDelay);
+        } else {
+          // Schedule delayed submission
+          submitTimeoutRef.current = window.setTimeout(() => {
+            if (hasSubmittedRef.current) return;
+            hasSubmittedRef.current = true;
+            onSubmit(combined!, combined === expectedAnswer);
+            clearAllCanvases();
+          }, autoSubmitDelay);
+        }
       }
     } else if (onSubmit && combined !== null) {
       // No expected answer (sudoku mode) - submit after delay
@@ -209,8 +255,7 @@ export const TwoDigitCanvas = ({
       }, autoSubmitDelay);
     }
 
-    console.log(`Recognition: tens=${tens.digit}, ones=${ones.digit}, combined=${combined}`);
-  }, [singleDigitMode, hasDrawing, recognizeSingleDigit, onRecognize, expectedAnswer, onSubmit, showDebugInfo, autoSubmitDelay, clearAllCanvases]);
+  }, [singleDigitMode, hasDrawing, recognizeSingleDigit, onRecognize, expectedAnswer, onSubmit, showDebugInfo, autoSubmitDelay, clearAllCanvases, useCandidates, useInstantSubmitDelay]);
 
   const getPosition = useCallback((e: MouseEvent | TouchEvent, canvas: HTMLCanvasElement) => {
     const rect = canvas.getBoundingClientRect();
@@ -377,23 +422,30 @@ export const TwoDigitCanvas = ({
       </div>
 
       <div className={styles.controls}>
-        <div className={styles.hint}>숫자를 쓰세요</div>
-        <button className={styles.clearButton} onClick={clearAllCanvases}>지우기</button>
+        <div className={styles.hint}>{t.write_number}</div>
+        <button className={styles.clearButton} onClick={clearAllCanvases}>{t.clear}</button>
       </div>
 
       {showDebugInfo && debugInfo && (
         <div className={styles.debugInfo}>
           <div className={styles.debugResult}>
-            인식: <strong>{debugInfo.combined ?? '?'}</strong>
+            {t.recognition}: <strong>{debugInfo.combined ?? '?'}</strong>
+            {debugInfo.confidence !== undefined && (
+              <span className={styles.confidence}>
+                {' '}({(debugInfo.confidence * 100).toFixed(1)}%)
+              </span>
+            )}
           </div>
           <div className={styles.debugDetails}>
-            10의 자리: {debugInfo.tens.digit ?? '-'} [{debugInfo.tens.candidates.join(', ')}]
+            {t.tens_digit}: {debugInfo.tens.digit ?? '-'} [{debugInfo.tens.candidates.join(', ')}]
+            {debugInfo.tens.confidence !== undefined && ` (${(debugInfo.tens.confidence * 100).toFixed(1)}%)`}
           </div>
           <div className={styles.debugDetails}>
-            1의 자리: {debugInfo.ones.digit ?? '-'} [{debugInfo.ones.candidates.join(', ')}]
+            {t.ones_digit}: {debugInfo.ones.digit ?? '-'} [{debugInfo.ones.candidates.join(', ')}]
+            {debugInfo.ones.confidence !== undefined && ` (${(debugInfo.ones.confidence * 100).toFixed(1)}%)`}
           </div>
           <div className={styles.debugDetails}>
-            후보: {debugInfo.combinedCandidates.slice(0, 5).join(', ')}
+            {t.candidates}: {debugInfo.combinedCandidates.slice(0, 5).join(', ')}
           </div>
         </div>
       )}

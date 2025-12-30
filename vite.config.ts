@@ -7,4 +7,7 @@ export default defineConfig({
     react(),
   ],
   base: '/brain-training/',
+  define: {
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+  },
 })

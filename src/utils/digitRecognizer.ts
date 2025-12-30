@@ -412,6 +412,13 @@ export async function recognizeDigit(canvas: HTMLCanvasElement): Promise<number>
   }
 }
 
+// Result with confidence scores
+export interface RecognitionResult {
+  digit: number;
+  confidence: number;
+  candidates: { digit: number; confidence: number }[];
+}
+
 // Recognize and return all possible number combinations
 export async function recognizeWithCandidates(
   canvas: HTMLCanvasElement,
@@ -498,6 +505,46 @@ export async function recognizeWithCandidates(
   combinations.sort((a, b) => b.prob - a.prob);
 
   return combinations.map(c => c.number);
+}
+
+// Recognize with full confidence information
+export async function recognizeWithConfidence(
+  canvas: HTMLCanvasElement,
+  topN: number = 3
+): Promise<RecognitionResult> {
+  if (!model) {
+    await loadModel();
+    if (!model) return { digit: 0, confidence: 0, candidates: [] };
+  }
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return { digit: 0, confidence: 0, candidates: [] };
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  let hasDrawing = false;
+  for (let y = 0; y < canvas.height; y++) {
+    for (let x = 0; x < canvas.width; x++) {
+      const i = (y * canvas.width + x) * 4;
+      if (imageData.data[i] < 200) {
+        hasDrawing = true;
+        break;
+      }
+    }
+    if (hasDrawing) break;
+  }
+
+  if (!hasDrawing) return { digit: 0, confidence: 0, candidates: [] };
+
+  const tensor = preprocessCanvas(canvas);
+  const candidates = await getTopCandidates(tensor, topN);
+  tensor.dispose();
+
+  return {
+    digit: candidates[0]?.digit ?? 0,
+    confidence: candidates[0]?.score ?? 0,
+    candidates: candidates.map(c => ({ digit: c.digit, confidence: c.score })),
+  };
 }
 
 // Check if any candidate matches the expected answer

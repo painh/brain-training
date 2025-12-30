@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAppStore } from '../stores/useAppStore';
+import { useI18nStore } from '../stores/useI18nStore';
 import styles from './Calendar.module.css';
 
 interface CalendarProps {
@@ -11,12 +12,35 @@ export const Calendar = ({ onBack }: CalendarProps) => {
   const [month, setMonth] = useState(new Date().getMonth());
 
   const { studyDays, getMonthlyStudyCount } = useAppStore();
+  const { t, language } = useI18nStore();
 
   const today = new Date();
   const firstDay = new Date(year, month, 1).getDay();
   const totalDays = new Date(year, month + 1, 0).getDate();
 
-  const days = ['일', '월', '화', '수', '목', '금', '토'];
+  // Day headers per language
+  const daysByLang: Record<string, string[]> = {
+    ko: ['일', '월', '화', '수', '목', '금', '토'],
+    en: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+    ja: ['日', '月', '火', '水', '木', '金', '土'],
+    'zh-CN': ['日', '一', '二', '三', '四', '五', '六'],
+    'zh-TW': ['日', '一', '二', '三', '四', '五', '六'],
+    es: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+  };
+  const days = daysByLang[language] || daysByLang.en;
+
+  // Month formatting per language
+  const formatMonth = () => {
+    if (language === 'ko') return `${year}년 ${month + 1}월`;
+    if (language === 'ja') return `${year}年 ${month + 1}月`;
+    if (language === 'zh-CN' || language === 'zh-TW') return `${year}年${month + 1}月`;
+    if (language === 'es') {
+      const months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+      return `${months[month]} ${year}`;
+    }
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${months[month]} ${year}`;
+  };
 
   const prevMonth = () => {
     if (month === 0) {
@@ -44,13 +68,13 @@ export const Calendar = ({ onBack }: CalendarProps) => {
         ←
       </button>
 
-      <div className={styles.title}>학습 기록</div>
+      <div className={styles.title}>{t.calendar_title}</div>
 
       <div className={styles.header}>
         <button className={styles.navButton} onClick={prevMonth}>
           ◀
         </button>
-        <span className={styles.monthTitle}>{year}년 {month + 1}월</span>
+        <span className={styles.monthTitle}>{formatMonth()}</span>
         <button className={styles.navButton} onClick={nextMonth}>
           ▶
         </button>
@@ -94,7 +118,7 @@ export const Calendar = ({ onBack }: CalendarProps) => {
       </div>
 
       <div className={styles.monthStats}>
-        이번 달 학습: <span className={styles.count}>{monthlyCount}</span>일
+        {t.this_month}: <span className={styles.count}>{monthlyCount}</span>{t.days}
       </div>
     </div>
   );
@@ -103,15 +127,13 @@ export const Calendar = ({ onBack }: CalendarProps) => {
 // Bottom screen for calendar
 export const CalendarStats = () => {
   const { getTotalStudyDays } = useAppStore();
+  const { t } = useI18nStore();
   const totalDays = getTotalStudyDays();
 
   return (
     <div className={styles.statsContainer}>
-      <div className={styles.statsLabel}>총 학습 일수</div>
-      <div className={styles.statsValue}>{totalDays}일</div>
-      <div className={styles.legend}>
-        <span className={styles.star}>★</span> = 학습 완료
-      </div>
+      <div className={styles.statsLabel}>{t.total_study_days}</div>
+      <div className={styles.statsValue}>{totalDays}{t.days}</div>
     </div>
   );
 };

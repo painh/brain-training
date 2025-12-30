@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useCalcStore } from '../stores/useCalcStore';
 import { useAppStore } from '../stores/useAppStore';
+import { useI18nStore } from '../stores/useI18nStore';
 import { TwoDigitCanvas, NumberPad, InputModeToggle } from '../components';
 import { playCorrectSound, playWrongSound } from '../utils/sounds';
 import type { Difficulty } from '../types';
@@ -25,6 +26,7 @@ export const CalcGame = ({ onBack, onComplete }: CalcGameProps) => {
   } = useCalcStore();
 
   const { saveProgress } = useAppStore();
+  const { t } = useI18nStore();
   const [timer, setTimer] = useState('0:00');
   const [showDifficultySelect, setShowDifficultySelect] = useState(true);
 
@@ -81,33 +83,22 @@ export const CalcGame = ({ onBack, onComplete }: CalcGameProps) => {
 
   // Difficulty selection screen
   if (showDifficultySelect) {
-    const difficultyLabels: Record<Difficulty, string> = {
-      easy: '초급',
-      medium: '중급',
-      hard: '고급',
-    };
-    const difficultyDesc: Record<Difficulty, string> = {
-      easy: '한 자리수 정답',
-      medium: '두 자리수 정답',
-      hard: '복잡한 계산',
-    };
-
     return (
       <div className={styles.topContent}>
         <button className={styles.backButton} onClick={onBack}>
           ←
         </button>
-        <div className={styles.title}>계산 훈련</div>
+        <div className={styles.title}>{t.calc_title}</div>
         <div className={styles.difficultySelect}>
-          <div className={styles.difficultyTitle}>난이도 선택</div>
           {(['easy', 'medium', 'hard'] as Difficulty[]).map((diff) => (
             <button
               key={diff}
               className={styles.difficultyButton}
               onClick={() => handleSelectDifficulty(diff)}
             >
-              <span className={styles.difficultyLabel}>{difficultyLabels[diff]}</span>
-              <span className={styles.difficultyDesc}>{difficultyDesc[diff]}</span>
+              <span className={styles.difficultyLabel}>
+                {diff === 'easy' ? t.easy : diff === 'medium' ? t.medium : t.hard}
+              </span>
             </button>
           ))}
         </div>
@@ -121,10 +112,8 @@ export const CalcGame = ({ onBack, onComplete }: CalcGameProps) => {
   const lastAnswer = answers[answers.length - 1];
   const showResult = lastAnswer && answers.length === currentIndex;
 
-  const difficultyLabels: Record<Difficulty, string> = {
-    easy: '초급',
-    medium: '중급',
-    hard: '고급',
+  const getDifficultyLabel = (diff: Difficulty) => {
+    return diff === 'easy' ? t.easy : diff === 'medium' ? t.medium : t.hard;
   };
 
   return (
@@ -133,10 +122,10 @@ export const CalcGame = ({ onBack, onComplete }: CalcGameProps) => {
         ←
       </button>
 
-      <div className={styles.title}>계산 훈련 ({difficultyLabels[difficulty]})</div>
+      <div className={styles.title}>{t.calc_title} ({getDifficultyLabel(difficulty)})</div>
 
       <div className={styles.stats}>
-        <span>문제: {currentIndex + 1}/{problems.length}</span>
+        <span>{t.problem_count}: {currentIndex + 1}/{problems.length}</span>
         <span className={styles.timer}>{timer}</span>
       </div>
 
@@ -172,7 +161,7 @@ export const CalcGame = ({ onBack, onComplete }: CalcGameProps) => {
 
 // Bottom screen input component
 export const CalcGameInput = () => {
-  const { inputMode, setInputMode, setProfessorExpression } = useAppStore();
+  const { inputMode, setInputMode, setProfessorExpression, useCandidates, useInstantSubmitDelay } = useAppStore();
   const { submitAnswer, nextProblem, getCurrentProblem, currentIndex } = useCalcStore();
   const isProcessingRef = useRef(false);
 
@@ -237,6 +226,8 @@ export const CalcGameInput = () => {
           expectedAnswer={problem?.answer}
           problemKey={currentIndex}
           autoSubmitDelay={1200}
+          useCandidates={useCandidates}
+          useInstantSubmitDelay={useInstantSubmitDelay}
         />
       ) : (
         <NumberPad onSubmit={handleNumberPadSubmit} />
