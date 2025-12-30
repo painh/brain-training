@@ -23,6 +23,7 @@ const formatBuildVersion = (isoString: string) => {
 };
 
 const BUILD_VERSION = formatBuildVersion(__BUILD_TIME__);
+console.log(`🧠 두뇌 트레이닝 v${BUILD_VERSION}`);
 
 function App() {
   const {
