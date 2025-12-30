@@ -1,0 +1,294 @@
+.topContent {
+  padding: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.backButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--ds-border);
+  background: var(--ds-cream);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  z-index: 10;
+}
+
+.backButton:hover {
+  background: var(--ds-cream-light);
+}
+
+.title {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  color: var(--ds-gray);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  color: var(--ds-gray);
+}
+
+.timer {
+  font-size: 24px;
+  color: var(--ds-red);
+}
+
+/* Problem list with scrolling */
+.problemList {
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 50px 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  scroll-behavior: smooth;
+  max-height: 140px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 25%,
+    black 75%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 25%,
+    black 75%,
+    transparent 100%
+  );
+}
+
+.problemItem {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.03);
+  opacity: 0.4;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.problemItem.current {
+  font-size: 20px;
+  background: var(--ds-blue);
+  color: white;
+  opacity: 1;
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.problemItem.past {
+  opacity: 0.6;
+}
+
+.problemItem.past.correct {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--ds-green);
+}
+
+.problemItem.past.wrong {
+  background: rgba(244, 67, 54, 0.15);
+  color: var(--ds-red);
+}
+
+.problemNumber {
+  font-size: 0.8em;
+  opacity: 0.7;
+  min-width: 20px;
+}
+
+.problemText {
+  flex: 1;
+}
+
+.problemAnswer {
+  font-weight: bold;
+}
+
+.problem {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 48px;
+  text-align: center;
+  color: #333;
+  margin: 20px 0;
+  letter-spacing: 4px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 24px;
+  text-align: center;
+  padding: 10px;
+  min-height: 50px;
+}
+
+.result.correct {
+  color: var(--ds-green);
+}
+
+.result.wrong {
+  color: var(--ds-red);
+}
+
+.difficultySelect {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  flex: 1;
+  justify-content: center;
+}
+
+.difficultyTitle {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 18px;
+  text-align: center;
+  color: var(--ds-blue-dark);
+  margin-bottom: 10px;
+}
+
+.difficultyButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px 20px;
+  border: 3px solid var(--ds-border);
+  border-radius: 12px;
+  background: var(--ds-cream);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.difficultyButton:hover {
+  background: var(--ds-cream-light);
+  border-color: var(--ds-blue);
+  transform: scale(1.02);
+}
+
+.difficultyButton:active {
+  transform: scale(0.98);
+}
+
+.difficultyLabel {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 24px;
+  color: var(--ds-blue-dark);
+}
+
+.difficultyDesc {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 12px;
+  color: var(--ds-gray);
+  margin-top: 4px;
+}
+
+.bottomContent {
+  padding: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawInputArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.inputDisplay {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 36px;
+  color: var(--ds-blue-dark);
+  background: white;
+  border: 2px solid var(--ds-border);
+  border-radius: 8px;
+  padding: 5px 20px;
+  min-width: 100px;
+  text-align: center;
+}
+
+.drawButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.drawButton {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  padding: 8px 16px;
+  border: 2px solid var(--ds-border);
+  border-radius: 8px;
+  background: var(--ds-cream);
+  cursor: pointer;
+}
+
+.drawButton:hover {
+  background: var(--ds-cream-light);
+}
+
+.drawButton.submitButton {
+  background: var(--ds-green);
+  color: white;
+  border-color: var(--ds-green);
+}
+
+.drawButton.submitButton:hover {
+  opacity: 0.9;
+}
+
+@media (max-height: 700px), (max-width: 500px) {
+  .stats {
+    font-size: 12px;
+  }
+
+  .timer {
+    font-size: 18px;
+  }
+
+  .problem {
+    font-size: 36px;
+    margin: 10px 0;
+  }
+
+  .problemItem {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .problemItem.current {
+    font-size: 16px;
+  }
+
+  .result {
+    font-size: 18px;
+    min-height: 40px;
+  }
+}

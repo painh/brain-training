@@ -1,0 +1,15 @@
+.professor {
+  position: relative;
+}
+
+.face {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-height: 700px), (max-width: 500px) {
+  .professor {
+    width: 60px !important;
+    height: 60px !important;
+  }
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Noto+Sans+KR:wght@400;700;900&display=swap');
+
+:root {
+  /* DS Color Palette */
+  --ds-cream: #E8E4D9;
+  --ds-cream-light: #F5F3EB;
+  --ds-cream-dark: #D4D0C5;
+  --ds-blue: #0066CC;
+  --ds-blue-light: #4499DD;
+  --ds-blue-dark: #004499;
+  --ds-red: #CC3333;
+  --ds-green: #339933;
+  --ds-orange: #DD7700;
+  --ds-gray: #666666;
+  --ds-border: #AAA89D;
+  --ds-shadow: #9A9889;
+  --screen-bg: #C5D9C5;
+  --screen-border: #2A2A2A;
+  --button-face: #E8E4D9;
+  --button-highlight: #FFFFFF;
+  --button-shadow: #A0A090;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+}
+
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile adjustments */
+@media (max-width: 500px) {
+  body {
+    padding: 10px;
+    align-items: flex-start;
+  }
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.bounce {
+  animation: bounce 0.5s ease;
+}
+
+.pulse {
+  animation: pulse 1s ease infinite;
+}

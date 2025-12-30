@@ -1,0 +1,63 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.header h1 {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 18px;
+  margin: 0;
+}
+
+.backButton {
+  background: var(--ds-cream);
+  border: 2px solid var(--ds-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.history {
+  width: 100%;
+  max-width: 280px;
+}
+
+.history h3 {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 14px;
+  margin: 0 0 8px 0;
+}
+
+.historyList {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.historyItem {
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 20px;
+  padding: 5px 10px;
+  background: #e0e0e0;
+  border-radius: 8px;
+  min-width: 40px;
+  text-align: center;
+}

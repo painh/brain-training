@@ -1,0 +1,87 @@
+.button {
+  font-family: 'DotGothic16', sans-serif;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  background: linear-gradient(180deg, #F5F3EB 0%, #E8E4D9 50%, #D4D0C5 100%);
+  color: var(--ds-gray);
+  box-shadow:
+    0 4px 0 var(--button-shadow),
+    0 6px 10px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.button:hover {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5F3EB 50%, #E8E4D9 100%);
+}
+
+.button:active {
+  transform: translateY(3px);
+  box-shadow:
+    0 1px 0 var(--button-shadow),
+    0 2px 5px rgba(0,0,0,0.2),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Variants */
+.primary {
+  background: linear-gradient(180deg, #4499DD 0%, #0066CC 50%, #004499 100%);
+  color: white;
+  box-shadow:
+    0 4px 0 #003366,
+    0 6px 10px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+.primary:hover {
+  background: linear-gradient(180deg, #55AAEE 0%, #1177DD 50%, #0055AA 100%);
+}
+
+.primary:active {
+  box-shadow:
+    0 1px 0 #003366,
+    0 2px 5px rgba(0,0,0,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+}
+
+/* Sizes */
+.small {
+  font-size: 12px;
+  padding: 6px 12px;
+}
+
+.medium {
+  font-size: 16px;
+  padding: 12px 24px;
+}
+
+.large {
+  font-size: 18px;
+  padding: 16px 32px;
+}
+
+/* Mobile */
+@media (max-height: 700px), (max-width: 500px) {
+  .small {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+
+  .medium {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .large {
+    font-size: 16px;
+    padding: 12px 24px;
+  }
+}
