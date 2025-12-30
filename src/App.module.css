@@ -79,6 +79,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .mainTitle {
@@ -88,6 +89,7 @@
   text-align: center;
   margin: 15px 0;
   text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+  flex-shrink: 0;
 }
 
 .menuButtons {
@@ -114,6 +116,7 @@
   box-shadow:
     0 3px 0 var(--ds-shadow),
     inset 0 1px 0 rgba(255,255,255,1);
+  flex-shrink: 0;
 }
 
 .menuButton:hover {
@@ -167,6 +170,7 @@
   opacity: 0.6;
   margin-top: auto;
   padding-bottom: 5px;
+  flex-shrink: 0;
 }
 
 /* Complete Screen */
