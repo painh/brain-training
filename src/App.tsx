@@ -42,8 +42,8 @@ function App() {
 
   const { language, setLanguage, t } = useI18nStore();
 
-  const { getStats: getCalcStats } = useCalcStore();
-  const { getStats: getSudokuStats } = useSudokuStore();
+  const { getStats: getCalcStats, reset: resetCalc } = useCalcStore();
+  const { getStats: getSudokuStats, reset: resetSudoku } = useSudokuStore();
 
   const brainAge = getBrainAge();
 
@@ -56,6 +56,9 @@ function App() {
   };
 
   const goToMenu = () => {
+    // Reset game states when going back to menu
+    resetCalc();
+    resetSudoku();
     setView('menu');
   };
 
