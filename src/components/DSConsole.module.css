@@ -42,6 +42,7 @@
 
 .touchScreenInner {
   background: #F8F8F0;
+  overflow: auto;
 }
 
 .hinge {
