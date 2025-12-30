@@ -25,6 +25,7 @@ interface TwoDigitCanvasProps {
   singleDigitMode?: boolean; // For sudoku - only show ones digit canvas
   useCandidates?: boolean; // If true, check if expectedAnswer is in candidates list (default: false)
   useInstantSubmitDelay?: boolean; // If true, wait 100ms before submitting correct answer (default: true)
+  clearRef?: React.MutableRefObject<(() => void) | null>; // Ref to expose clear function
 }
 
 export const TwoDigitCanvas = ({
@@ -37,6 +38,7 @@ export const TwoDigitCanvas = ({
   singleDigitMode = false,
   useCandidates = false,
   useInstantSubmitDelay = true,
+  clearRef,
 }: TwoDigitCanvasProps) => {
   const { t } = useI18nStore();
   const tensCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -92,6 +94,18 @@ export const TwoDigitCanvas = ({
       isMountedRef.current = false;
     };
   }, []);
+
+  // Expose clear function via ref
+  useEffect(() => {
+    if (clearRef) {
+      clearRef.current = clearAllCanvases;
+    }
+    return () => {
+      if (clearRef) {
+        clearRef.current = null;
+      }
+    };
+  }, [clearRef, clearAllCanvases]);
 
   // Initialize canvases and load model
   useEffect(() => {

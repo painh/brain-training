@@ -6,24 +6,25 @@
 }
 
 .backButton {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  margin-top: auto;
+  font-family: 'DotGothic16', sans-serif;
+  font-size: 12px;
+  padding: 8px 20px;
   border: 2px solid var(--ds-border);
-  background: var(--ds-cream);
+  border-radius: 8px;
+  background: linear-gradient(180deg, #FFFFFF 0%, #F0F0E8 100%);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  z-index: 10;
+  box-shadow: 0 2px 0 var(--ds-shadow);
+  color: var(--ds-gray);
 }
 
 .backButton:hover {
-  background: var(--ds-cream-light);
+  background: linear-gradient(180deg, #F8F8F0 0%, #E8E8E0 100%);
+}
+
+.backButton:active {
+  transform: translateY(2px);
+  box-shadow: none;
 }
 
 .title {

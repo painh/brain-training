@@ -64,10 +64,6 @@ export const Calendar = ({ onBack }: CalendarProps) => {
 
   return (
     <div className={styles.container}>
-      <button className={styles.backButton} onClick={onBack}>
-        ←
-      </button>
-
       <div className={styles.title}>{t.calendar_title}</div>
 
       <div className={styles.header}>
@@ -125,7 +121,11 @@ export const Calendar = ({ onBack }: CalendarProps) => {
 };
 
 // Bottom screen for calendar
-export const CalendarStats = () => {
+interface CalendarStatsProps {
+  onBack: () => void;
+}
+
+export const CalendarStats = ({ onBack }: CalendarStatsProps) => {
   const { getTotalStudyDays } = useAppStore();
   const { t } = useI18nStore();
   const totalDays = getTotalStudyDays();
@@ -134,6 +134,9 @@ export const CalendarStats = () => {
     <div className={styles.statsContainer}>
       <div className={styles.statsLabel}>{t.total_study_days}</div>
       <div className={styles.statsValue}>{totalDays}{t.days}</div>
+      <button className={styles.backButton} onClick={onBack}>
+        {t.back}
+      </button>
     </div>
   );
 };

@@ -192,7 +192,7 @@ function App() {
         return null;
 
       case 'calendar':
-        return <CalendarStats />;
+        return <CalendarStats onBack={goToMenu} />;
 
       case 'complete':
         return (

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSudokuStore } from '../stores/useSudokuStore';
 import { useAppStore } from '../stores/useAppStore';
 import { useI18nStore } from '../stores/useI18nStore';
@@ -123,11 +123,21 @@ export const SudokuGameInput = ({ onBack }: SudokuGameInputProps) => {
   const { inputMode, setInputMode } = useAppStore();
   const { inputNumber, eraseCell, selectedCell, showHints, setShowHints, difficulty, setDifficulty, startGame } = useSudokuStore();
   const { t } = useI18nStore();
+  const clearCanvasRef = useRef<(() => void) | null>(null);
 
   const handleDrawSubmit = (digit: number) => {
     if (digit >= 1 && digit <= 9) {
       inputNumber(digit);
     }
+  };
+
+  const handleErase = () => {
+    // Clear canvas if in draw mode
+    if (clearCanvasRef.current) {
+      clearCanvasRef.current();
+    }
+    // Also erase sudoku cell
+    eraseCell();
   };
 
   const handleDifficultyChange = (diff: Difficulty) => {
@@ -177,10 +187,11 @@ export const SudokuGameInput = ({ onBack }: SudokuGameInputProps) => {
             onSubmit={(digit) => handleDrawSubmit(digit)}
             autoSubmitDelay={400}
             singleDigitMode={true}
+            clearRef={clearCanvasRef}
           />
           <button
             className={`${styles.numButton} ${styles.eraseButton}`}
-            onClick={eraseCell}
+            onClick={handleErase}
           >
             {t.erase}
           </button>
@@ -198,7 +209,7 @@ export const SudokuGameInput = ({ onBack }: SudokuGameInputProps) => {
           ))}
           <button
             className={`${styles.numButton} ${styles.wide}`}
-            onClick={eraseCell}
+            onClick={handleErase}
           >
             {t.erase}
           </button>
