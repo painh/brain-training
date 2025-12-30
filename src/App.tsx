@@ -1,5 +1,6 @@
 import { useAppStore } from './stores/useAppStore';
 import { useCalcStore } from './stores/useCalcStore';
+import { useSudokuStore } from './stores/useSudokuStore';
 import { useI18nStore, languageNames, type Language } from './stores/useI18nStore';
 import {
   DSConsole,
@@ -35,11 +36,14 @@ function App() {
     setUseCandidates,
     useInstantSubmitDelay,
     setUseInstantSubmitDelay,
+    lastCompletedGame,
+    setLastCompletedGame,
   } = useAppStore();
 
   const { language, setLanguage, t } = useI18nStore();
 
-  const { getStats } = useCalcStore();
+  const { getStats: getCalcStats } = useCalcStore();
+  const { getStats: getSudokuStats } = useSudokuStore();
 
   const brainAge = getBrainAge();
 
@@ -58,10 +62,16 @@ function App() {
   const renderTopScreen = () => {
     switch (currentView) {
       case 'calc':
-        return <CalcGame onBack={goToMenu} onComplete={() => setView('complete')} />;
+        return <CalcGame onBack={goToMenu} onComplete={() => {
+          setLastCompletedGame('calc');
+          setView('complete');
+        }} />;
 
       case 'sudoku':
-        return <SudokuGame onBack={goToMenu} onComplete={() => setView('complete')} />;
+        return <SudokuGame onBack={goToMenu} onComplete={() => {
+          setLastCompletedGame('sudoku');
+          setView('complete');
+        }} />;
 
       case 'debug':
         return <RecognitionDebug onBack={goToMenu} />;
@@ -116,19 +126,25 @@ function App() {
         return <Calendar onBack={goToMenu} />;
 
       case 'complete':
-        const stats = getStats();
+        const calcStats = getCalcStats();
+        const sudokuStats = getSudokuStats();
+        const isCalc = lastCompletedGame === 'calc';
+        const elapsedSeconds = isCalc ? calcStats.elapsedSeconds : sudokuStats.elapsedSeconds;
+        const brainAgeResult = isCalc ? calcStats.brainAge : sudokuStats.brainAge;
         return (
           <div className={styles.completeScreen}>
             <div className={styles.completeTitle}>{t.training_complete}</div>
+            {isCalc && (
+              <div className={styles.completeStats}>
+                {t.accuracy}: {calcStats.accuracy}%
+              </div>
+            )}
             <div className={styles.completeStats}>
-              {t.accuracy}: {stats.accuracy}%
-            </div>
-            <div className={styles.completeStats}>
-              {t.time_spent}: {Math.floor(stats.elapsedSeconds / 60)}:{String(stats.elapsedSeconds % 60).padStart(2, '0')}
+              {t.time_spent}: {Math.floor(elapsedSeconds / 60)}:{String(elapsedSeconds % 60).padStart(2, '0')}
             </div>
             <div className={styles.brainAgeSection}>
               <div className={styles.brainAgeLabel}>{t.measured_brain_age}</div>
-              <div className={styles.brainAgeValue}>{stats.brainAge}</div>
+              <div className={styles.brainAgeValue}>{brainAgeResult}</div>
               <div className={styles.brainAgeUnit}>{t.years_old}</div>
             </div>
             <DSButton variant="primary" onClick={goToMenu}>

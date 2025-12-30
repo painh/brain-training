@@ -12,6 +12,8 @@ interface AppStore {
   // Navigation
   currentView: ScreenView;
   setView: (view: ScreenView) => void;
+  lastCompletedGame: 'calc' | 'sudoku' | null;
+  setLastCompletedGame: (game: 'calc' | 'sudoku' | null) => void;
 
   // Input mode
   inputMode: InputMode;
@@ -50,6 +52,8 @@ export const useAppStore = create<AppStore>()(
       // Navigation
       currentView: 'menu',
       setView: (view) => set({ currentView: view }),
+      lastCompletedGame: null,
+      setLastCompletedGame: (game) => set({ lastCompletedGame: game }),
 
       // Input mode
       inputMode: 'draw',

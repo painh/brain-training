@@ -14,6 +14,7 @@ interface SudokuStore {
   isComplete: boolean;
   noteMode: boolean; // Toggle between input mode and note mode
   showHints: boolean; // Auto-show possible candidates
+  startTime: number | null;
 
   // Actions
   startGame: (difficulty?: Difficulty) => void;
@@ -26,6 +27,7 @@ interface SudokuStore {
   setShowHints: (enabled: boolean) => void;
   getCandidates: (row: number, col: number) => Set<number>; // Get possible candidates for a cell
   checkComplete: () => boolean;
+  getStats: () => { elapsedSeconds: number; brainAge: number };
   reset: () => void;
 }
 
@@ -125,6 +127,7 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
   isComplete: false,
   noteMode: false,
   showHints: true, // Default to showing hints
+  startTime: null,
 
   startGame: (difficulty) => {
     const diff = difficulty || get().difficulty;
@@ -139,6 +142,7 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
       difficulty: diff,
       isComplete: false,
       noteMode: false,
+      startTime: Date.now(),
     });
   },
 
@@ -297,6 +301,23 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
     return true;
   },
 
+  getStats: () => {
+    const { startTime, difficulty } = get();
+    const elapsedSeconds = startTime
+      ? Math.floor((Date.now() - startTime) / 1000)
+      : 0;
+
+    // Calculate brain age based on time and difficulty
+    let brainAge = 20;
+    const baseTime = { easy: 300, medium: 600, hard: 900 }[difficulty]; // expected times in seconds
+    if (elapsedSeconds > baseTime) {
+      brainAge += Math.floor((elapsedSeconds - baseTime) / 60);
+    }
+    brainAge = Math.min(80, Math.max(20, brainAge));
+
+    return { elapsedSeconds, brainAge };
+  },
+
   reset: () => {
     set({
       solution: createEmptyGrid(),
@@ -306,6 +327,7 @@ export const useSudokuStore = create<SudokuStore>((set, get) => ({
       selectedCell: null,
       isComplete: false,
       noteMode: false,
+      startTime: null,
     });
   },
 }));

@@ -24,6 +24,7 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
     selectCell,
     showHints,
     getCandidates,
+    getStats,
   } = useSudokuStore();
 
   const { saveProgress } = useAppStore();
@@ -36,14 +37,16 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
   // Handle completion
   useEffect(() => {
     if (isComplete) {
+      const stats = getStats();
       saveProgress({
         game: 'sudoku',
         date: new Date().toISOString(),
         difficulty,
+        brainAge: stats.brainAge,
       });
       onComplete();
     }
-  }, [isComplete, difficulty, saveProgress, onComplete]);
+  }, [isComplete, difficulty, saveProgress, onComplete, getStats]);
 
   return (
     <div className={styles.topContent}>
