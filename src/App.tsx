@@ -187,7 +187,10 @@ function App() {
       default: // menu
         return (
           <div className={styles.menuBottom}>
-            <div className={styles.mainTitle}>{t.app_title}</div>
+            <div className={styles.titleRow}>
+              <div className={styles.mainTitle}>{t.app_title}</div>
+              <div className={styles.version}>v{BUILD_VERSION}</div>
+            </div>
             <div className={styles.menuButtons}>
               <button className={styles.menuButton} onClick={() => setView('calc')}>
                 <div className={`${styles.menuIcon} ${styles.calc}`}>🔢</div>
@@ -210,7 +213,6 @@ function App() {
                 <span className={styles.menuText}>{t.settings}</span>
               </button>
             </div>
-            <div className={styles.version}>v{BUILD_VERSION}</div>
           </div>
         );
     }

@@ -82,14 +82,20 @@
   overflow: hidden;
 }
 
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+  margin: 15px 0;
+  flex-shrink: 0;
+}
+
 .mainTitle {
   font-family: 'DotGothic16', sans-serif;
   font-size: 20px;
   color: var(--ds-blue-dark);
-  text-align: center;
-  margin: 15px 0;
   text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
-  flex-shrink: 0;
 }
 
 .menuButtons {
@@ -166,11 +172,7 @@
   font-family: 'DotGothic16', sans-serif;
   font-size: 10px;
   color: var(--ds-gray);
-  text-align: center;
   opacity: 0.6;
-  margin-top: auto;
-  padding-bottom: 5px;
-  flex-shrink: 0;
 }
 
 /* Complete Screen */
