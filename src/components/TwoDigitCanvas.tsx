@@ -393,6 +393,11 @@ export const TwoDigitCanvas = ({
       onesCanvas.removeEventListener('touchmove', handleTouchMove);
       onesCanvas.removeEventListener('touchend', handleTouchEnd);
 
+      // Stop any playing sound and reset drawing state when unmounting
+      stopDrawingSound();
+      isDrawingRef.current = false;
+      activeCanvasRef.current = null;
+
       if (submitTimeoutRef.current) {
         clearTimeout(submitTimeoutRef.current);
       }
