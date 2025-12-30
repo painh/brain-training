@@ -11,7 +11,8 @@ interface SudokuGameProps {
   onComplete: () => void;
 }
 
-export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
+export const SudokuGame = ({ onBack: _onBack, onComplete }: SudokuGameProps) => {
+  void _onBack; // Back button moved to bottom screen
   const {
     puzzle,
     userGrid,

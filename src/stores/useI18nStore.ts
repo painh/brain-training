@@ -29,6 +29,7 @@ interface Translations {
   use_instant_delay: string;
   use_instant_delay_desc: string;
   language: string;
+  theme: string;
 
   // Calc Game
   calc_title: string;
@@ -97,6 +98,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: '정답 확인 딜레이',
     use_instant_delay_desc: '정답일 때 0.1초 기다린 후 제출 (그림 완성 확인용)',
     language: '언어',
+    theme: '테마',
 
     calc_title: '계산 훈련',
     problem_count: '문제',
@@ -158,6 +160,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: 'Correct Answer Delay',
     use_instant_delay_desc: 'Wait 0.1s before submitting correct answer (to verify drawing is complete)',
     language: 'Language',
+    theme: 'Theme',
 
     calc_title: 'Calculation Training',
     problem_count: 'Problem',
@@ -219,6 +222,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: '正解確認ディレイ',
     use_instant_delay_desc: '正解時に0.1秒待ってから送信（描画完了確認用）',
     language: '言語',
+    theme: 'テーマ',
 
     calc_title: '計算トレーニング',
     problem_count: '問題',
@@ -280,6 +284,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: '正确答案延迟',
     use_instant_delay_desc: '正确时等待0.1秒后提交（确认绘制完成）',
     language: '语言',
+    theme: '主题',
 
     calc_title: '计算训练',
     problem_count: '题目',
@@ -341,6 +346,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: '正確答案延遲',
     use_instant_delay_desc: '正確時等待0.1秒後提交（確認繪製完成）',
     language: '語言',
+    theme: '主題',
 
     calc_title: '計算訓練',
     problem_count: '題目',
@@ -402,6 +408,7 @@ const translations: Record<Language, Translations> = {
     use_instant_delay: 'Retraso de respuesta correcta',
     use_instant_delay_desc: 'Esperar 0.1s antes de enviar respuesta correcta (para verificar dibujo)',
     language: 'Idioma',
+    theme: 'Tema',
 
     calc_title: 'Entrenamiento de Cálculo',
     problem_count: 'Problema',

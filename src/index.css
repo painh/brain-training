@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=DotGothic16&family=Noto+Sans+KR:wght@400;700;900&display=swap');
 
 :root {
-  /* DS Color Palette */
+  /* DS Color Palette (legacy, for backwards compatibility) */
   --ds-cream: #E8E4D9;
   --ds-cream-light: #F5F3EB;
   --ds-cream-dark: #D4D0C5;
@@ -19,6 +19,26 @@
   --button-face: #E8E4D9;
   --button-highlight: #FFFFFF;
   --button-shadow: #A0A090;
+
+  /* Theme Colors (defaults to Midnight Scholar) */
+  --theme-primary: #1a1a2e;
+  --theme-secondary: #16213e;
+  --theme-background: #0f0f1a;
+  --theme-surface: #1a1a2e;
+  --theme-surface-alt: #252542;
+  --theme-text: #e8e8e8;
+  --theme-text-muted: #8892b0;
+  --theme-accent: #c9a227;
+  --theme-accent-secondary: #f4d160;
+  --theme-border: #3a3a5a;
+  --theme-shadow: rgba(0, 0, 0, 0.4);
+  --theme-success: #4ade80;
+  --theme-error: #f87171;
+  --theme-button-radius: 4px;
+  --theme-button-shadow: 0 2px 8px rgba(201, 162, 39, 0.2);
+  --theme-font-primary: 'Noto Sans KR', sans-serif;
+  --theme-font-display: 'Noto Sans KR', sans-serif;
+  --theme-blur: 0;
 }
 
 * {

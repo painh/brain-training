@@ -7,7 +7,8 @@ interface CalendarProps {
   onBack: () => void;
 }
 
-export const Calendar = ({ onBack }: CalendarProps) => {
+export const Calendar = ({ onBack: _onBack }: CalendarProps) => {
+  void _onBack; // Preserved for interface compatibility
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth());
 

@@ -25,7 +25,8 @@ const useDebugStore = create<DebugStore>((set) => ({
   clearHistory: () => set({ history: [] }),
 }));
 
-export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
+export const RecognitionDebug = ({ onBack: _onBack }: { onBack: () => void }) => {
+  void _onBack; // Preserved for interface compatibility
   const { t } = useI18nStore();
   const { addHistory } = useDebugStore();
 
@@ -38,7 +39,6 @@ export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button className={styles.backButton} onClick={onBack}>←</button>
         <h1>{t.debug_title}</h1>
       </div>
 
@@ -53,7 +53,11 @@ export const RecognitionDebug = ({ onBack }: { onBack: () => void }) => {
 };
 
 // Bottom screen component
-export const RecognitionDebugInput = () => {
+interface RecognitionDebugInputProps {
+  onBack: () => void;
+}
+
+export const RecognitionDebugInput = ({ onBack }: RecognitionDebugInputProps) => {
   const { t } = useI18nStore();
   const { history, clearHistory } = useDebugStore();
 
@@ -78,6 +82,9 @@ export const RecognitionDebugInput = () => {
           {t.no_history}
         </div>
       )}
+      <button className={styles.backButton} onClick={onBack}>
+        {t.back}
+      </button>
     </div>
   );
 };

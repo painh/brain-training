@@ -2,10 +2,10 @@ import { useAppStore } from './stores/useAppStore';
 import { useCalcStore } from './stores/useCalcStore';
 import { useSudokuStore } from './stores/useSudokuStore';
 import { useI18nStore, languageNames, type Language } from './stores/useI18nStore';
+import { useThemeStore, themes, type ThemeId } from './stores/useThemeStore';
 import {
   DSConsole,
   DSButton,
-  Professor,
   Calendar,
   CalendarStats,
 } from './components';
@@ -30,7 +30,6 @@ function App() {
   const {
     currentView,
     setView,
-    professorExpression,
     getBrainAge,
     useCandidates,
     setUseCandidates,
@@ -41,6 +40,7 @@ function App() {
   } = useAppStore();
 
   const { language, setLanguage, t } = useI18nStore();
+  const { currentTheme, setTheme } = useThemeStore();
 
   const { getStats: getCalcStats, reset: resetCalc } = useCalcStore();
   const { getStats: getSudokuStats, reset: resetSudoku } = useSudokuStore();
@@ -82,9 +82,6 @@ function App() {
       case 'settings':
         return (
           <div className={styles.settingsScreen}>
-            <button className={styles.backButton} onClick={goToMenu}>
-              ←
-            </button>
             <div className={styles.settingsTitle}>{t.settings}</div>
             <div className={styles.settingsList}>
               <label className={styles.settingItem}>
@@ -117,6 +114,20 @@ function App() {
                   {(Object.keys(languageNames) as Language[]).map((lang) => (
                     <option key={lang} value={lang}>
                       {languageNames[lang]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className={styles.settingItem}>
+                <span className={styles.settingLabel}>{t.theme}</span>
+                <select
+                  value={currentTheme}
+                  onChange={(e) => setTheme(e.target.value as ThemeId)}
+                  className={styles.settingSelect}
+                >
+                  {(Object.keys(themes) as ThemeId[]).map((themeId) => (
+                    <option key={themeId} value={themeId}>
+                      {language === 'ko' ? themes[themeId].nameKo : themes[themeId].name}
                     </option>
                   ))}
                 </select>
@@ -159,10 +170,7 @@ function App() {
       default: // menu
         return (
           <div className={styles.menuTop}>
-            <div className={styles.professorArea}>
-              <Professor expression={professorExpression} size={80} />
-            </div>
-            <div className={styles.speechBubble}>
+            <div className={styles.greeting}>
               {getGreeting()}<br />
               {t.start_training.split('\n').map((line, i) => (
                 <span key={i}>{line}{i === 0 && <br />}</span>
@@ -189,10 +197,16 @@ function App() {
         return <SudokuGameInput onBack={goToMenu} />;
 
       case 'debug':
-        return <RecognitionDebugInput />;
+        return <RecognitionDebugInput onBack={goToMenu} />;
 
       case 'settings':
-        return null;
+        return (
+          <div className={styles.settingsBottom}>
+            <button className={styles.settingsBackButton} onClick={goToMenu}>
+              {t.back}
+            </button>
+          </div>
+        );
 
       case 'calendar':
         return <CalendarStats onBack={goToMenu} />;
