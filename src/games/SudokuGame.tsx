@@ -73,7 +73,6 @@ export const SudokuGame = ({ onBack, onComplete }: SudokuGameProps) => {
               const notesToShow = hasUserNotes
                 ? cellNotes
                 : (showCandidates ? candidates : new Set<number>());
-              const noteStyle = hasUserNotes ? styles.active : styles.hint;
 
               return (
                 <div
